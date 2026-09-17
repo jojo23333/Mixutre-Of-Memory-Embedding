@@ -1,0 +1,151 @@
+"""
+Utilities for saving and loading base-model checkpoints.
+"""
+
+import glob
+import json
+import logging
+import os
+import re
+
+import torch
+
+from nanochat.common import get_base_dir, setup_default_logging
+from nanochat.bigram_engram_gpt import BigramEngramGPT
+from nanochat.gpt import GPT, GPTConfig
+from nanochat.qwen3_0p5b_model import Qwen3_0p5B
+from nanochat.stemgpt_350m_model import StemGPT350M
+from nanochat.tokenizer import get_tokenizer
+
+setup_default_logging()
+logger = logging.getLogger(__name__)
+
+
+def log0(message):
+    if int(os.environ.get("RANK", 0)) == 0:
+        logger.info(message)
+
+
+def _resolve_model_class(model_type: str):
+    if model_type == "gpt":
+        return GPT
+    if model_type == "bigram_engram_gpt":
+        return BigramEngramGPT
+    if model_type in {"qwen3_0p5b", "qwen3_0p5b_stem"}:
+        return Qwen3_0p5B
+    if model_type == "stemgpt_350m":
+        return StemGPT350M
+    raise ValueError(f"Unknown model_type: {model_type}")
+
+
+
+
+def save_checkpoint(checkpoint_dir, step, model_data, optimizer_data, meta_data, rank=0):
+    if rank == 0:
+        os.makedirs(checkpoint_dir, exist_ok=True)
+        model_path = os.path.join(checkpoint_dir, f"model_{step:06d}.pt")
+        torch.save(model_data, model_path)
+        logger.info(f"Saved model parameters to: {model_path}")
+        meta_path = os.path.join(checkpoint_dir, f"meta_{step:06d}.json")
+        with open(meta_path, "w", encoding="utf-8") as f:
+            json.dump(meta_data, f, indent=2)
+        logger.info(f"Saved metadata to: {meta_path}")
+    if optimizer_data is not None:
+        os.makedirs(checkpoint_dir, exist_ok=True)
+        optimizer_path = os.path.join(checkpoint_dir, f"optim_{step:06d}_rank{rank:d}.pt")
+        torch.save(optimizer_data, optimizer_path)
+        logger.info(f"Saved optimizer state to: {optimizer_path}")
+
+
+def load_checkpoint(checkpoint_dir, step, device, load_optimizer=False, rank=0):
+    model_path = os.path.join(checkpoint_dir, f"model_{step:06d}.pt")
+    model_data = torch.load(model_path, map_location=device)
+    optimizer_data = None
+    if load_optimizer:
+        optimizer_path = os.path.join(checkpoint_dir, f"optim_{step:06d}_rank{rank:d}.pt")
+        optimizer_data = torch.load(optimizer_path, map_location=device)
+    meta_path = os.path.join(checkpoint_dir, f"meta_{step:06d}.json")
+    with open(meta_path, "r", encoding="utf-8") as f:
+        meta_data = json.load(f)
+    return model_data, optimizer_data, meta_data
+
+
+def build_model(checkpoint_dir, step, device, phase):
+    """
+    Build a base model from a checkpoint.
+    Returns:
+    - base model - uncompiled, not wrapped in DDP
+    - tokenizer
+    - meta data saved during base model training
+    """
+    assert phase in {"train", "eval"}, f"Invalid phase: {phase}"
+    model_data, _, meta_data = load_checkpoint(checkpoint_dir, step, device, load_optimizer=False)
+    if device.type in {"cpu", "mps"}:
+        model_data = {
+            k: v.float() if v.dtype == torch.bfloat16 else v
+            for k, v in model_data.items()
+        }
+    model_data = {k.removeprefix("_orig_mod."): v for k, v in model_data.items()}
+    model_type = meta_data.get("model_type", "gpt")
+    model_config_kwargs = dict(meta_data["model_config"])
+    log0(f"Building model with config: {model_config_kwargs}")
+    model_config = GPTConfig(**model_config_kwargs)
+    ModelClass = _resolve_model_class(model_type)
+    with torch.device("meta"):
+        model = ModelClass(model_config)
+    model.to_empty(device=device)
+    model.init_weights()
+    model.load_state_dict(model_data, strict=True, assign=True)
+    if phase == "eval":
+        model.eval()
+    else:
+        model.train()
+    tokenizer = get_tokenizer()
+    assert tokenizer.get_vocab_size() == model_config_kwargs["vocab_size"], (
+        f"Tokenizer vocab size {tokenizer.get_vocab_size()} does not match model config "
+        f"vocab size {model_config_kwargs['vocab_size']}"
+    )
+    return model, tokenizer, meta_data
+
+
+def find_largest_model(checkpoints_dir):
+    model_tags = [f for f in os.listdir(checkpoints_dir) if os.path.isdir(os.path.join(checkpoints_dir, f))]
+    if not model_tags:
+        raise FileNotFoundError(f"No checkpoints found in {checkpoints_dir}")
+    candidates = []
+    for model_tag in model_tags:
+        match = re.match(r"d(\d+)", model_tag)
+        if match:
+            model_depth = int(match.group(1))
+            candidates.append((model_depth, model_tag))
+    if candidates:
+        candidates.sort(key=lambda x: x[0], reverse=True)
+        return candidates[0][1]
+    model_tags.sort(key=lambda x: os.path.getmtime(os.path.join(checkpoints_dir, x)), reverse=True)
+    return model_tags[0]
+
+
+def find_last_step(checkpoint_dir):
+    checkpoint_files = glob.glob(os.path.join(checkpoint_dir, "model_*.pt"))
+    if not checkpoint_files:
+        raise FileNotFoundError(f"No checkpoints found in {checkpoint_dir}")
+    return int(max(os.path.basename(f).split("_")[-1].split(".")[0] for f in checkpoint_files))
+
+
+def load_model_from_dir(checkpoints_dir, device, phase, model_tag=None, step=None):
+    if model_tag is None:
+        model_tag = find_largest_model(checkpoints_dir)
+        log0(f"No model tag provided, guessing model tag: {model_tag}")
+    checkpoint_dir = os.path.join(checkpoints_dir, model_tag)
+    if step is None:
+        step = find_last_step(checkpoint_dir)
+    assert step is not None, f"No checkpoints found in {checkpoint_dir}"
+    log0(f"Loading model from {checkpoint_dir} with step {step}")
+    return build_model(checkpoint_dir, step, device, phase)
+
+
+def load_model(source, *args, **kwargs):
+    if source != "base":
+        raise ValueError(f"Unsupported checkpoint source: {source}")
+    checkpoints_dir = os.path.join(get_base_dir(), "base_checkpoints")
+    return load_model_from_dir(checkpoints_dir, *args, **kwargs)

@@ -1,0 +1,29 @@
+cff-version: 1.2.0
+message: "Please cite the MoME paper when using this software."
+title: "MoME: Mixture-of-Memory Embeddings for Context-Aware Sparse Lookup"
+type: software
+authors:
+  - family-names: Li
+    given-names: Muchen
+  - family-names: Sigal
+    given-names: Leonid
+  - family-names: Liao
+    given-names: Renjie
+repository-code: "https://github.com/jojo23333/Mixutre-Of-Memory-Embedding"
+url: "https://arxiv.org/abs/2609.15126"
+preferred-citation:
+  type: article
+  title: "MoME: Mixture-of-Memory Embeddings for Context-Aware Sparse Lookup"
+  authors:
+    - family-names: Li
+      given-names: Muchen
+    - family-names: Sigal
+      given-names: Leonid
+    - family-names: Liao
+      given-names: Renjie
+  year: 2026
+  journal: arXiv
+  identifiers:
+    - type: other
+      value: "arXiv:2609.15126"
+  url: "https://arxiv.org/abs/2609.15126"

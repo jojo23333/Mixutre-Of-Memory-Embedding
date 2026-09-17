@@ -1,0 +1,48 @@
+{
+  "source": "https://arxiv.org/abs/2609.15126",
+  "status": "reported values; compound settings use seeds 42/43, Bigram uses seeds 42/43/44",
+  "rows": [
+    {
+      "row": "bigram",
+      "memory_parameters_millions": 151,
+      "train_bpb": 0.8632,
+      "val_bpb": 0.8636
+    },
+    {
+      "row": "mome-n6-m6",
+      "memory_parameters_millions": 151,
+      "train_bpb": 0.8618,
+      "val_bpb": 0.8624
+    },
+    {
+      "row": "mome-n12-m6",
+      "memory_parameters_millions": 302,
+      "train_bpb": 0.8576,
+      "val_bpb": 0.8582
+    },
+    {
+      "row": "mome-n6-m12",
+      "memory_parameters_millions": 302,
+      "train_bpb": 0.8582,
+      "val_bpb": 0.8588
+    },
+    {
+      "row": "mome-n12-m12",
+      "memory_parameters_millions": 604,
+      "train_bpb": 0.854,
+      "val_bpb": 0.8546
+    },
+    {
+      "row": "mome-n24-m6",
+      "memory_parameters_millions": 604,
+      "train_bpb": 0.8541,
+      "val_bpb": 0.8547
+    },
+    {
+      "row": "mome-n6-m24",
+      "memory_parameters_millions": 604,
+      "train_bpb": 0.8544,
+      "val_bpb": 0.855
+    }
+  ]
+}

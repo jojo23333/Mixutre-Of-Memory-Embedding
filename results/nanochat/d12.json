@@ -1,0 +1,168 @@
+{
+  "source": "https://arxiv.org/abs/2609.15126",
+  "status": "reported reference values; not a fresh run",
+  "rows": [
+    {
+      "row": "base",
+      "train_bpb": {
+        "mean": 0.8783,
+        "std": 0.0009
+      },
+      "val_bpb": {
+        "mean": 0.8785,
+        "std": 0.001
+      },
+      "core": {
+        "mean": 0.1447,
+        "std": 0.0064
+      },
+      "memory_parameters_millions": 0,
+      "total_parameters_millions": 135,
+      "throughput_million_tokens_per_second": 1.15
+    },
+    {
+      "row": "bigram",
+      "train_bpb": {
+        "mean": 0.8632,
+        "std": 0.0009
+      },
+      "val_bpb": {
+        "mean": 0.8636,
+        "std": 0.0009
+      },
+      "core": {
+        "mean": 0.1533,
+        "std": 0.0116
+      },
+      "memory_parameters_millions": 151,
+      "total_parameters_millions": 286,
+      "throughput_million_tokens_per_second": 1.09
+    },
+    {
+      "row": "vembedding",
+      "train_bpb": {
+        "mean": 0.8631,
+        "std": 0.0006
+      },
+      "val_bpb": {
+        "mean": 0.8633,
+        "std": 0.0006
+      },
+      "core": {
+        "mean": 0.1522,
+        "std": 0.0045
+      },
+      "memory_parameters_millions": 151,
+      "total_parameters_millions": 286,
+      "throughput_million_tokens_per_second": 1.1
+    },
+    {
+      "row": "mome-c1-m6",
+      "train_bpb": {
+        "mean": 0.8618,
+        "std": 0.0002
+      },
+      "val_bpb": {
+        "mean": 0.8621,
+        "std": 0.0003
+      },
+      "core": {
+        "mean": 0.1571,
+        "std": 0.003
+      },
+      "memory_parameters_millions": 151,
+      "total_parameters_millions": 286,
+      "throughput_million_tokens_per_second": 1.07
+    },
+    {
+      "row": "mome-c2-m12",
+      "train_bpb": {
+        "mean": 0.8609,
+        "std": 0.0003
+      },
+      "val_bpb": {
+        "mean": 0.8611,
+        "std": 0.0003
+      },
+      "core": {
+        "mean": 0.1583,
+        "std": 0.002
+      },
+      "memory_parameters_millions": 151,
+      "total_parameters_millions": 287,
+      "throughput_million_tokens_per_second": 1.07
+    },
+    {
+      "row": "mome-c4-m24",
+      "train_bpb": {
+        "mean": 0.8608,
+        "std": 0.0004
+      },
+      "val_bpb": {
+        "mean": 0.861,
+        "std": 0.0004
+      },
+      "core": {
+        "mean": 0.1554,
+        "std": 0.0029
+      },
+      "memory_parameters_millions": 151,
+      "total_parameters_millions": 287,
+      "throughput_million_tokens_per_second": 1.07
+    },
+    {
+      "row": "mome-c1-m12",
+      "train_bpb": {
+        "mean": 0.8567,
+        "std": 0.0002
+      },
+      "val_bpb": {
+        "mean": 0.8569,
+        "std": 0.0002
+      },
+      "core": {
+        "mean": 0.1635,
+        "std": 0.0067
+      },
+      "memory_parameters_millions": 302,
+      "total_parameters_millions": 438,
+      "throughput_million_tokens_per_second": 1.03
+    },
+    {
+      "row": "mome-c2-m24",
+      "train_bpb": {
+        "mean": 0.8558,
+        "std": 0.0003
+      },
+      "val_bpb": {
+        "mean": 0.8561,
+        "std": 0.0003
+      },
+      "core": {
+        "mean": 0.1664,
+        "std": 0.0059
+      },
+      "memory_parameters_millions": 302,
+      "total_parameters_millions": 438,
+      "throughput_million_tokens_per_second": 1.03
+    },
+    {
+      "row": "mome-c4-m48",
+      "train_bpb": {
+        "mean": 0.8563,
+        "std": 0.0005
+      },
+      "val_bpb": {
+        "mean": 0.8565,
+        "std": 0.0006
+      },
+      "core": {
+        "mean": 0.1515,
+        "std": 0.011
+      },
+      "memory_parameters_millions": 302,
+      "total_parameters_millions": 439,
+      "throughput_million_tokens_per_second": 1.02
+    }
+  ]
+}

@@ -1,0 +1,70 @@
+{
+  "source": "https://arxiv.org/abs/2609.15126",
+  "status": "reported seed-42 values; original wall-time statistics retained",
+  "rows": [
+    {
+      "family": "qwen3",
+      "method": "Base",
+      "memory_parameters_millions": 0.0,
+      "val_bpb": 0.7594,
+      "core": 0.2491,
+      "arc_easy_percent": 65.99,
+      "arc_challenge_percent": 35.32,
+      "boolq_percent": 59.88,
+      "piqa_percent": 70.78,
+      "hellaswag_percent": 50.58,
+      "openbookqa_percent": 37.6,
+      "winogrande_percent": 55.96,
+      "bigbench_average_percent": 25.72,
+      "wall_time_relative": 1.0
+    },
+    {
+      "family": "qwen3",
+      "method": "STEM",
+      "memory_parameters_millions": 1409.0,
+      "val_bpb": 0.7564,
+      "core": 0.2556,
+      "arc_easy_percent": 67.97,
+      "arc_challenge_percent": 36.52,
+      "boolq_percent": 56.39,
+      "piqa_percent": 71.98,
+      "hellaswag_percent": 51.01,
+      "openbookqa_percent": 39.0,
+      "winogrande_percent": 56.59,
+      "bigbench_average_percent": 26.01,
+      "wall_time_relative": 1.07
+    },
+    {
+      "family": "qwen3",
+      "method": "VEmbedding",
+      "memory_parameters_millions": 470.0,
+      "val_bpb": 0.7427,
+      "core": 0.253,
+      "arc_easy_percent": 66.5,
+      "arc_challenge_percent": 38.05,
+      "boolq_percent": 47.55,
+      "piqa_percent": 71.0,
+      "hellaswag_percent": 53.07,
+      "openbookqa_percent": 39.0,
+      "winogrande_percent": 57.14,
+      "bigbench_average_percent": 26.82,
+      "wall_time_relative": 1.06
+    },
+    {
+      "family": "qwen3",
+      "method": "MoME-A2/8",
+      "memory_parameters_millions": 470.0,
+      "val_bpb": 0.7461,
+      "core": 0.2737,
+      "arc_easy_percent": 67.09,
+      "arc_challenge_percent": 38.31,
+      "boolq_percent": 63.39,
+      "piqa_percent": 71.76,
+      "hellaswag_percent": 53.39,
+      "openbookqa_percent": 39.6,
+      "winogrande_percent": 56.04,
+      "bigbench_average_percent": 26.19,
+      "wall_time_relative": 1.06
+    }
+  ]
+}
