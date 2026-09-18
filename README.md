@@ -1,6 +1,6 @@
 # Mixture-of-Memory Embedding
 
-[🤗 Pretrained checkpoints](https://huggingface.co/jojo23333/MOME-NanoChat-D24-100B) · [Paper](https://arxiv.org/abs/2609.15126) · [Citation](#citation)
+[🤗 Pretrained checkpoints](https://huggingface.co/jojo23333/MOME-NanoChat-D24-100B) · [Paper](https://www.alphaxiv.org/abs/2609.15126) · [Citation](#citation)
 
 Training and evaluation code for MoME, with Nanochat, Llama/MobileLLM and Qwen3 backbones.
 
